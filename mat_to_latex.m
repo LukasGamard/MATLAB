@@ -1,18 +1,31 @@
-function y=mat_to_latex(M, type)
+function mat_to_latex(M, type, precision)
 % Lukas Gamard, dec 2021
 % converts a RxC-matrix to Latex notation
 % INPUT: matrix M
 %        bracket type
-% USAGE: mat_to_latex(M, "bmatrix")
+%        numbers equal to zero below given precision vill be written with
+%        one digit
+% USAGE: mat_to_latex(M, "bmatrix", 1e-4)
     file = fopen(sprintf("%s_to_latex.m", inputname(1)), "w");
     
     fprintf(file, "\\begin{%s}\n", type);
     [R, C] = size(M);    
     for i = 1:R
         for j = 1:C-1
-            fprintf(file, "%f & ", M(i,j));    
+            fprintf(file, "%s & ", format_float(M(i,j), precision));    
         end
-        fprintf(file, "%f \\\\\n", M(i, C));
+        fprintf(file, "%s \\\\\n", format_float(M(i,C), precision));
     end
     fprintf(file, "\\end{%s}", type);
+end
+
+function y=format_float(x, eps)
+% returns a string representation of a float
+% 0 if differs from 0 with given precision
+% 2 digits otherwise
+    if x <= eps
+        y = "0";
+    else
+        y = sprintf("%.2f", x);
+    end
 end
