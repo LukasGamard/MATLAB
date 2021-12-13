@@ -21,10 +21,10 @@ end
 
 function y=format_float(x, eps)
 % returns a string representation of a float
-% 0 if differs from 0 with given precision
+% an integer if enough precision
 % 2 digits otherwise
-    if x <= eps
-        y = "0";
+    if x - floor(x) <= eps
+        y = sprintf("%d",floor(x));
     else
         y = sprintf("%.2f", x);
     end
